@@ -53,7 +53,7 @@ export async function authenticateWithPassword(app: FastifyInstance) {
                     expiresIn: '7d',
                 },
             }
-    );
+        );
 
         return reply.status(201).send({ token })
     })
