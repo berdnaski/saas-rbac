@@ -10,6 +10,7 @@ import { getProfile } from "./routes/auth/get-profile";
 import { errorHandler } from "./error-handler";
 import { requestPasswordRecover } from "./routes/auth/request-password-recover";
 import { resetPassword } from "./routes/auth/reset-password";
+import { authenticateWithGithub } from "./routes/auth/authenticate-with-github";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -45,6 +46,7 @@ app.register(authenticateWithPassword);
 app.register(getProfile);
 app.register(requestPasswordRecover);
 app.register(resetPassword);
+app.register(authenticateWithGithub);
 
 app.listen({ port: 3333 }).then(() => {
     console.log("Server is running on port 3333");
