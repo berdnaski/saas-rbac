@@ -19,6 +19,7 @@
     "config/*"
   ],
   "dependencies": {
-    "next-saas-rbac": "file:"
+    "next-saas-rbac": "file:",
+    "zod": "^3.23.8"
   }
 }
