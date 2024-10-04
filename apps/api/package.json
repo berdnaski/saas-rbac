@@ -7,11 +7,13 @@
         "db:studio": "npm run env:load prisma studio",
         "env:load": "dotenv -e ../../.env --"
     },
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
+    },
     "dependencies": {
         "@fastify/cors": "^10.0.1",
         "@fastify/swagger": "^9.1.0",
         "@fastify/swagger-ui": "^5.0.1",
-        "@prisma/client": "^5.20.0",
         "@saas/auth": "*",
         "@saas/env": "*",
         "bcryptjs": "^2.4.3",
@@ -23,6 +25,7 @@
     },
     "devDependencies": {
         "@faker-js/faker": "^9.0.3",
+        "@prisma/client": "^5.20.0",
         "@saas/eslint-config": "*",
         "@saas/prettier": "*",
         "@saas/tsconfig": "*",
@@ -30,10 +33,9 @@
         "@types/node": "^22.7.4",
         "dotenv-cli": "^7.4.2",
         "prisma": "^5.20.0",
-        "tsx": "^4.19.1"
-    },
-    "prisma": {
-        "seed": "tsx prisma/seed.ts"
+        "ts-node": "^10.9.2",
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.2"
     },
     "prettier": "@saas/prettier",
     "eslintConfig": {
