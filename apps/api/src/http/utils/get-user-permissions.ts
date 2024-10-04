@@ -9,5 +9,5 @@ export function getUserPermissions(userId: string, role: Role) {
 
     const ability = defineAbilityFor(authUser);
 
-    return ability
+    return ability;
 }
