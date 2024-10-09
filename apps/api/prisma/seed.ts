@@ -1,10 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import { hash } from 'bcryptjs'
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
 
 const prisma = new PrismaClient()
 
@@ -17,7 +13,7 @@ async function seed() {
   const user = await prisma.user.create({
     data: {
       name: 'John Doe',
-      email: 'john2@acme.com',
+      email: 'john@acme.com',
       avatarUrl: 'https://github.com/diego3g.png',
       passwordHash,
     },
@@ -44,7 +40,7 @@ async function seed() {
   await prisma.organization.create({
     data: {
       name: 'Acme Inc (Admin)',
-      domain: 'acme1.com',
+      domain: 'acme.com',
       slug: 'acme-admin',
       avatarUrl: faker.image.avatarGitHub(),
       shouldAttachUsersByDomain: true,
@@ -84,24 +80,6 @@ async function seed() {
                 anotherUser.id,
                 anotherUser2.id,
               ]),
-            },
-          ],
-        },
-      },
-      members: {
-        createMany: {
-          data: [
-            {
-              userId: user.id,
-              role: 'ADMIN',
-            },
-            {
-              userId: anotherUser.id,
-              role: 'MEMBER',
-            },
-            {
-              userId: anotherUser2.id,
-              role: 'MEMBER',
             },
           ],
         },
@@ -154,24 +132,6 @@ async function seed() {
           ],
         },
       },
-      members: {
-        createMany: {
-          data: [
-            {
-              userId: user.id,
-              role: 'BILLING',
-            },
-            {
-              userId: anotherUser.id,
-              role: 'ADMIN',
-            },
-            {
-              userId: anotherUser2.id,
-              role: 'MEMBER',
-            },
-          ],
-        },
-      },
     },
   })
 
@@ -216,24 +176,6 @@ async function seed() {
                 anotherUser.id,
                 anotherUser2.id,
               ]),
-            },
-          ],
-        },
-      },
-      members: {
-        createMany: {
-          data: [
-            {
-              userId: user.id,
-              role: 'MEMBER',
-            },
-            {
-              userId: anotherUser.id,
-              role: 'ADMIN',
-            },
-            {
-              userId: anotherUser2.id,
-              role: 'MEMBER',
             },
           ],
         },
