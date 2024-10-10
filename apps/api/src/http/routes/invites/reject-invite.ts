@@ -1,61 +1,59 @@
-import type { FastifyInstance } from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { FastifyInstance } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
-import { prisma } from '@/lib/prisma'
+
 import { auth } from '@/http/middlewares/auth'
+import { prisma } from '@/lib/prisma'
+
+import { BadRequestError } from '../_errors/bad-request-error'
+
 export async function rejectInvite(app: FastifyInstance) {
-	app
-		.withTypeProvider<ZodTypeProvider>()
-		.register(auth)
-		.post(
-			'/invites/:inviteId/reject',
-			{
-				schema: {
-					tags: ['Invites'],
-					summary: 'Reject an invite',
-					params: z.object({
-						inviteId: z.string().uuid(),
-					}),
-					response: {
-						204: z.null(),
-					},
-				},
-			},
-			async (request, reply) => {
-				const userId = await request.getCurrentUserId()
-				const { inviteId } = request.params
-				const invite = await prisma.invite.findUnique({
-					where: {
-						id: inviteId,
-					},
-				})
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .register(auth)
+    .post(
+      '/invites/:inviteId/reject',
+      {
+        schema: {
+          tags: ['invites'],
+          summary: 'Reject an invite',
+          params: z.object({
+            inviteId: z.string().uuid(),
+          }),
+          response: {
+            204: z.null(),
+          },
+        },
+      },
+      async (request, reply) => {
+        const userId = await request.getCurrentUserId()
+        const { inviteId } = request.params
 
-				if (!invite) {
-					throw new BadRequestError('Invite not found or expired.')
-				}
+        const invite = await prisma.invite.findUnique({
+          where: { id: inviteId },
+        })
 
-				const user = await prisma.user.findUnique({
-					where: {
-						id: userId,
-					},
-				})
+        if (!invite) {
+          throw new BadRequestError('Invite not found or expired')
+        }
 
-				if (!user) {
-					throw new BadRequestError('User not found.')
-				}
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        })
 
-				if (invite.email !== user.email) {
-					throw new BadRequestError('This invite belongs to another user.')
-				}
+        if (!user) {
+          throw new BadRequestError('User not found')
+        }
 
-				await prisma.invite.delete({
-					where: {
-						id: inviteId,
-					},
-				})
+        if (invite.email !== user.email) {
+          throw new BadRequestError('This invite belongs to another user')
+        }
 
-				return reply.status(204).send()
-			}
-		)
+        prisma.invite.delete({
+          where: { id: inviteId },
+        })
+
+        return reply.status(204).send()
+      },
+    )
 }

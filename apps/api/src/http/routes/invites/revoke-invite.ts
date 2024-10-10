@@ -1,64 +1,63 @@
-import { auth } from '@/http/middlewares/auth';
-import { prisma } from '@/lib/prisma';
-import type { FastifyInstance } from 'fastify';
-import type { ZodTypeProvider } from 'fastify-type-provider-zod';
-import z from 'zod';
-import { getUserPermissions } from '@/http/utils/get-user-permissions';
-import { UnauthorizedError } from '../_errors/unauthorized-error';
-import { roleSchema } from '@saas/auth';
-import { BadRequestError } from '../_errors/bad-request-error';
+import { FastifyInstance } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { z } from 'zod'
+
+import { auth } from '@/http/middlewares/auth'
+import { prisma } from '@/lib/prisma'
+import { getUserPermissions } from '@/utils/get-user-permissions'
+
+import { BadRequestError } from '../_errors/bad-request-error'
+import { UnauthorizedError } from '../_errors/unauthorized-error'
 
 export async function revokeInvite(app: FastifyInstance) {
-	app
-		.withTypeProvider<ZodTypeProvider>()
-		.register(auth)
-		.post(
-			'/organizations/:slug/invites/:inviteId',
-			{
-				schema: {
-					tags: ['invites'],
-					summary: 'Revoke an invite',
-					security: [{ bearerAuth: [] }],
-                    params: z.object({
-                        slug: z.string(),
-                        inviteId: z.string().uuid(),
-                    }),
-					response: {
-						204: z.null(),
-					},
-				},
-			},
-			async (request, reply) => {
-                const { slug, inviteId } = request.params;
-				const userId = await request.getCurrentUserId();
-                const { organization, membership } = await request.getUserMembership(slug);
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .register(auth)
+    .delete(
+      '/organizations/:slug/invites/:inviteId',
+      {
+        schema: {
+          tags: ['invites'],
+          summary: 'Revoke an invite',
+          security: [{ bearerAuth: [] }],
+          params: z.object({
+            slug: z.string(),
+            inviteId: z.string().uuid(),
+          }),
+          response: {
+            204: z.null(),
+          },
+        },
+      },
+      async (request, reply) => {
+        const { slug, inviteId } = request.params
 
-                const { cannot } = getUserPermissions(userId, membership.role);
+        const userId = await request.getCurrentUserId()
+        const { organization, membership } =
+          await request.getUserMembership(slug)
 
-                if (cannot('delete', 'Invite')) {
-                    throw new UnauthorizedError(
-                        `You're not allowed to delete an invite.`
-                    )
-                }
+        const { cannot } = getUserPermissions(userId, membership.role)
 
-                const invite = await prisma.invite.findUnique({
-                    where: {
-                        id: inviteId,
-                        organizationId: organization.id,
-                    }
-                })
+        if (cannot('delete', 'Invite')) {
+          throw new UnauthorizedError(`You're not allowed to delete an invites`)
+        }
 
-                if (!invite) {
-                    throw new BadRequestError('Invite not found.')
-                }
+        const invite = await prisma.invite.findUnique({
+          where: {
+            id: inviteId,
+            organizationId: organization.id,
+          },
+        })
 
-                await prisma.invite.delete({
-                    where: {
-                        id: inviteId,
-                    }
-                })
+        if (!invite) {
+          throw new BadRequestError('Invite not found')
+        }
 
-                return reply.status(204).send();
-			},
-		)
+        await prisma.invite.delete({
+          where: { id: inviteId },
+        })
+
+        return reply.status(204).send()
+      },
+    )
 }

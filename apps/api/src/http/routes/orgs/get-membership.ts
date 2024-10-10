@@ -1,6 +1,6 @@
-import { roleSchema } from '@saas/auth'
-import type { FastifyInstance } from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { roleSchema } from '@nivo/auth'
+import { FastifyInstance } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
 import { auth } from '@/http/middlewares/auth'
@@ -10,10 +10,10 @@ export async function getMembership(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/organization/:slug/membership',
+      '/organizations/:slug/membership',
       {
         schema: {
-          tags: ['Organizations'],
+          tags: ['organizations'],
           summary: 'Get user membership on organization',
           security: [{ bearerAuth: [] }],
           params: z.object({
@@ -33,7 +33,6 @@ export async function getMembership(app: FastifyInstance) {
       },
       async (request) => {
         const { slug } = request.params
-
         const { membership } = await request.getUserMembership(slug)
 
         return {

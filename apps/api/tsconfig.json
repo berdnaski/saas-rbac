@@ -1,10 +1,10 @@
 {
-    "extends": "@saas/tsconfig/node.json",
-    "include": ["src/**/*", "@types/*.d.ts"],
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+  "extends": "@nivo/tsconfig/node.json",
+  "include": ["src/**/*", "@types/*.d.ts"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     }
+  }
 }

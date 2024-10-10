@@ -16,12 +16,12 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  tokens             Token[]
-  accounts           Account[]
-  invites            Invite[]
-  member_on          Member[]
-  owns_organizations Organization[]
-  owns_projects      Project[]
+  tokens        Token[]
+  accounts      Account[]
+  invites       Invite[]
+  memberships   Membership[]
+  organizations Organization[]
+  projects      Project[]
 
   @@map("users")
 }
@@ -80,7 +80,7 @@ model Invite {
   @@map("invites")
 }
 
-model Member {
+model Membership {
   id   String @id @default(uuid())
   role Role   @default(MEMBER)
 
@@ -91,25 +91,26 @@ model Member {
   userId String @map("user_id")
 
   @@unique([organizationId, userId])
-  @@map("members")
+  @@map("memberships")
 }
 
 model Organization {
-  id                        String   @id @default(uuid())
-  name                      String
-  slug                      String   @unique
-  domain                    String?  @unique
-  shouldAttachUsersByDomain Boolean  @default(false) @map("should_attach_users_by_domain")
-  avatarUrl                 String?  @map("avatar_url")
-  createdAt                 DateTime @default(now()) @map("created_at")
-  updatedAt                 DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  domain    String?  @unique
+  avatarUrl String?  @map("avatar_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  shouldAttachUsersByDomain Boolean @default(false) @map("should_attach_users_by_domain")
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String @map("owner_id")
 
-  invites  Invite[]
-  members  Member[]
-  projects Project[]
+  invites     Invite[]
+  memberships Membership[]
+  projects    Project[]
 
   @@map("organizations")
 }
