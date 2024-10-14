@@ -26,7 +26,7 @@
     "@fastify/swagger-ui": "^3.1.0",
     "@nivo/auth": "*",
     "@nivo/env": "*",
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^5.14.0",
     "bcryptjs": "^2.4.3",
     "fastify": "^4.27.0",
     "fastify-plugin": "^4.5.1",

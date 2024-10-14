@@ -1,14 +1,14 @@
 {
-  "name": "@saas/tsconfig",
+  "name": "@nivo/tsconfig",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
   "files": [
     "library.json",
-    "node.json"
+    "node.json",
+    "nextjs.json"
   ],
   "dependencies": {
-    "@saas/tsconfig": "file:",
-    "@saas/typescript-config": "file:"
+    "@nivo/tsconfig": "file:"
   }
 }

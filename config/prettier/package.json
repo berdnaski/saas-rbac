@@ -1,12 +1,13 @@
 {
-    "name": "@saas/prettier",
-    "version": "0.0.0.",
-    "main": "index.mjs",
-    "private": true,
-    "dependencies": {
-        "@saas/prettier": "file:"
-    },
-    "devDependencies": {
-        "prettier-plugin-tailwindcss": "^0.6.8"
-    }
+  "name": "@nivo/prettier",
+  "version": "0.0.0",
+  "main": "index.mjs",
+  "private": "true",
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.14"
+  },
+  "dependencies": {
+    "@nivo/prettier": "file:"
+  }
 }
